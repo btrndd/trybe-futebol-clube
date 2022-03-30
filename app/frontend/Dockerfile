@@ -1,7 +1,6 @@
 FROM node:16-alpine
 WORKDIR /app/frontend
-ADD node_modules.tar.gz ./
-COPY ["./package.json", "./package-lock.json", "./.env", "./.gitignore", "./README.md", "./"]
+COPY ["./package.json", "./package-lock.json", "./.env", "./.gitignore", "./"]
 RUN ["npm", "install"]
 EXPOSE 3000
 RUN ["mkdir", "/src"]
