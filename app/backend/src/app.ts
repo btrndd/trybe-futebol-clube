@@ -1,4 +1,6 @@
+import cors = require('cors');
 import * as express from 'express';
+import router from './routes/LoginRouter';
 
 class App {
   public app: express.Express;
@@ -6,6 +8,7 @@ class App {
 
   constructor() {
     // ...
+    this.app = express();
     this.config();
     // ...
   }
@@ -19,12 +22,15 @@ class App {
     };
 
     this.app.use(accessControl);
+    this.app.use(cors());
+    this.app.use(express.json());
+    this.app.use(router);
     // ...
   }
 
   // ...
   public start(PORT: string | number):void {
-    // ...
+    this.app.listen(PORT, () => console.log(`Escutando na porta ${PORT}`));
   }
 }
 

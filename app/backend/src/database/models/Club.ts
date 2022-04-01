@@ -3,9 +3,9 @@ import db from '.';
 import Match from './Match';
 
 class Club extends Model {
-  declare id: number;
+  id: number;
 
-  declare clubName: string;
+  clubName: string;
 }
 
 Club.init(
