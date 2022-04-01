@@ -9,14 +9,13 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      clubName: {
+      club_name: {
         type: Sequelize.STRING,
-        field: 'club_name',
         allowNull: false,
       },
     });
   },
   down: async (queryInterface, _Sequelize) => {
     await queryInterface.dropTable('clubs');
-  }
+  },
 };

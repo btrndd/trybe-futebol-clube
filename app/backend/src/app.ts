@@ -1,17 +1,14 @@
-import cors = require('cors');
 import * as express from 'express';
 import bodyParser = require('body-parser');
-import router from './routes/LoginRouter';
+import cors = require('cors');
+import LoginRouter from './routers/LoginRouter';
 
 class App {
   public app: express.Express;
-  // ...
 
   constructor() {
-    // ...
     this.app = express();
     this.config();
-    // ...
   }
 
   private config():void {
@@ -23,19 +20,16 @@ class App {
     };
 
     this.app.use(accessControl);
-    this.app.use(cors());
     this.app.use(bodyParser.json());
-    this.app.use(router);
-    // ...
+    this.app.use(cors());
+    this.app.use(LoginRouter);
   }
 
-  // ...
   public start(PORT: string | number):void {
-    this.app.listen(PORT, () => console.log(`Escutando na porta ${PORT}`));
+    this.app.listen(PORT, () => console.log(`Running on Port:${PORT}`));
   }
 }
 
 export { App };
 
-// A execução dos testes de cobertura depende dessa exportação
 export const { app } = new App();
