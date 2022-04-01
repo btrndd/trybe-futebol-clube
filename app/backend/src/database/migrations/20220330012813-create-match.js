@@ -14,7 +14,11 @@ module.exports = {
         field: 'home_team',
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
-        references: { model: 'clubs', key: 'id' },
+        references: {
+          model: {
+            tableName: "clubs",
+          },
+        },
         allowNull: false,
       },
       homeTeamGoals: {
@@ -27,7 +31,11 @@ module.exports = {
         field: 'away_team',
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
-        references: { model: 'clubs', key: 'id' },
+        references: {
+          model: {
+            tableName: "clubs",
+          },
+        },
         allowNull: false,
       },
       awayTeamGoals: {
@@ -37,7 +45,7 @@ module.exports = {
       },
       inProgress: {
         field: 'in_progress',
-        type: Sequelize.TINYINT,
+        type: Sequelize.BOOLEAN,
         allowNull: false,
       },
     });

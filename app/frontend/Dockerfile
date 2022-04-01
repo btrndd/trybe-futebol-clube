@@ -12,13 +12,13 @@
   
 FROM node:16-alpine
 
-WORKDIR /frontend
+WORKDIR /app/frontend
 
-COPY package.json .
+COPY package*.json ./
 
-RUN npm install
+RUN npm install --silent
 
-COPY . . 
+COPY . .
 
 EXPOSE 3000
 
