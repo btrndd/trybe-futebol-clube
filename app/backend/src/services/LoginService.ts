@@ -13,12 +13,13 @@ class LoginService {
   }
 
   private static VerifyEmail(email: string): void {
+    const missingMailMessage = 'All fields must be filled';
     const regexEmail = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
     if (!email && email !== '') {
-      const err = new HttpException(EError.isRequired, '"email" is required');
+      const err = new HttpException(EError.notAuthorized, missingMailMessage);
       throw err;
     } if (email === '') {
-      const err = new HttpException(EError.invalidData, '"email" is not allowed to be empty');
+      const err = new HttpException(EError.notAuthorized, missingMailMessage);
       throw err;
     }
     if (regexEmail.test(email) === false) {
@@ -29,12 +30,13 @@ class LoginService {
   }
 
   private static VerifyPassword(password: string): void {
+    const missingPasswordMessage = 'All fields must be filled';
     if (!password && password !== '') {
-      const err = new HttpException(EError.isRequired, '"password" is required');
+      const err = new HttpException(EError.notAuthorized, missingPasswordMessage);
       throw err;
     }
     if (password === '') {
-      const err = new HttpException(EError.invalidData, '"password" is not allowed to be empty');
+      const err = new HttpException(EError.notAuthorized, missingPasswordMessage);
       throw err;
     }
     if (password.length < 6) {
