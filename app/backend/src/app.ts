@@ -1,7 +1,7 @@
 import * as express from 'express';
-import bodyParser = require('body-parser');
 import cors = require('cors');
-// import LoginRouter from './routers/LoginRouter';
+import LoginRouter from './routers/LoginRouter';
+import errorMiddleware from './middlewares/errorMiddleware';
 
 class App {
   public app: express.Express;
@@ -20,9 +20,11 @@ class App {
     };
 
     this.app.use(accessControl);
-    this.app.use(bodyParser.json());
+    this.app.use(express.json());
     this.app.use(cors());
-    // this.app.use(LoginRouter);
+    this.app.use('/login', LoginRouter);
+    this.app.use(errorMiddleware.manage);
+    this.app.use(errorMiddleware.server);
   }
 
   public start(PORT: string | number):void {

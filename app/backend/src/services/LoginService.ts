@@ -1,6 +1,8 @@
 import { readFileSync } from 'fs';
 import * as jwt from 'jsonwebtoken';
+import HttpException from '../interfaces/HttpException';
 import User from '../database/models/User';
+import EError from '../interfaces/EError';
 
 class LoginService {
   _email: string;
@@ -15,41 +17,31 @@ class LoginService {
   public VerifyEmail(): void {
     const regexEmail = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
     if (!this._email && this._email !== '') {
-      const err = new Error();
-      err.name = 'requiredData';
-      err.message = '"email" is required';
+      const err = new HttpException(EError.isRequired, '"email" is required');
       throw err;
     } if (this._email === '') {
-      const err = new Error();
-      err.name = 'emptyData';
-      err.message = '"email" is not allowed to be empty';
+      const err = new HttpException(EError.invalidData, '"email" is not allowed to be empty');
       throw err;
     }
     if (regexEmail.test(this._email) === false) {
-      const err = new Error();
-      err.name = 'invalidData';
-      err.message = '"email" must be a valid email';
+      const error = '"email" must be a valid email';
+      const err = new HttpException(EError.invalidData, error);
       throw err;
     }
   }
 
   public VerifyPassword(): void {
     if (!this._password && this._password !== '') {
-      const err = new Error();
-      err.name = 'requiredData';
-      err.message = '"password" is required';
+      const err = new HttpException(EError.isRequired, '"password" is required');
       throw err;
     }
     if (this._password === '') {
-      const err = new Error();
-      err.name = 'invalidData';
-      err.message = '"password" is not allowed to be empty';
+      const err = new HttpException(EError.invalidData, '"password" is not allowed to be empty');
       throw err;
     }
     if (this._password.length < 6) {
-      const err = new Error();
-      err.name = 'emptyData';
-      err.message = '"password" length must be 6 characters long';
+      const error = '"password" length must be 6 characters long';
+      const err = new HttpException(EError.invalidData, error);
       throw err;
     }
   }
@@ -58,20 +50,18 @@ class LoginService {
     this.VerifyPassword();
     this.VerifyEmail();
     const email = this._email;
-    const user = await User.findOne({ where: { email } });
-    if (!user || user.password !== this._password) {
-      const err = new Error();
-      err.name = 'unauthorized';
-      err.message = 'Invalid fields';
+    const foundUser = await User.findOne({ where: { email } });
+    if (!foundUser || foundUser.password !== this._password) {
+      const err = new HttpException(EError.notAuthorized, 'Invalid fields');
       throw err;
     }
     const key = readFileSync('./jwt.evaluation.key', 'utf-8');
-    const payload = { id: user.id, username: user.username, email, role: user.role };
-    const token = jwt.sign(payload, key, {
+    const user = { id: foundUser.id, username: foundUser.username, email, role: foundUser.role };
+    const token = jwt.sign(user, key, {
       algorithm: 'HS256',
       expiresIn: '1d',
     });
-    return { token, payload };
+    return { user, token };
   }
 }
 
