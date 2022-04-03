@@ -1,9 +1,12 @@
 import * as express from 'express';
-import LoginController from '../controllers/LoginController';
+import LoginFactory from '../factories/LoginFactory';
 
 const router = express.Router();
+const controller = LoginFactory();
 
 // LOGIN
-router.post('/', LoginController.Login);
+router.post('/', (req, res, next) => {
+  controller.Login(req, res, next);
+});
 
 export default router;
