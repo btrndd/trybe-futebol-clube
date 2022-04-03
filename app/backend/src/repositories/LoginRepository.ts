@@ -8,10 +8,9 @@ export default class LoginRepository {
   // }
 
   async getByEmail(email: string) {
-    const result = await User.findOne({ where: { email } });
+    const result = await User.findOne({ where: { email }, raw: true });
     this.user = result;
-    console.log(this.user);
-    return result;
+    return this.user;
   }
 
   // async edit(id: User['id'], changes: EditUser): Promise<void> {

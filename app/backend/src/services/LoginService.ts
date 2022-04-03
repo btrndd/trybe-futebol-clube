@@ -1,3 +1,4 @@
+import bcrypt = require('bcryptjs');
 import { readFileSync } from 'fs';
 import * as jwt from 'jsonwebtoken';
 import HttpException from '../interfaces/HttpException';
@@ -47,11 +48,11 @@ class LoginService {
     LoginService.VerifyPassword(password);
     LoginService.VerifyEmail(email);
     const foundUser = await this._loginRepository.getByEmail(email);
-    if (!foundUser || foundUser.password !== password) {
-      const err = new HttpException(EError.notAuthorized, 'Invalid fields');
+    const checkPassword = await bcrypt.compare(password, foundUser?.password || 'not');
+    if (!foundUser || !checkPassword) {
+      const err = new HttpException(EError.notAuthorized, 'Incorrect email or password');
       throw err;
     }
-    console.log(foundUser);
     const key = readFileSync('./jwt.evaluation.key', 'utf-8');
     const user = { id: foundUser.id, username: foundUser.username, email, role: foundUser.role };
     const token = jwt.sign(user, key, {
