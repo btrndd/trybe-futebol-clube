@@ -17,6 +17,20 @@ class LoginController {
       next(err);
     }
   }
+
+  Validate(req: Request, res: Response, next: NextFunction) {
+    const token = req.headers.authorization;
+    if (!token) {
+      return res.status(401).json({ message: 'Not authorized!' });
+    }
+    try {
+      const response = this._loginService.Validate(token);
+      const { role } = response;
+      res.status(200).json(role);
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 export default LoginController;

@@ -8,13 +8,16 @@ import LoginRepository from '../repositories/LoginRepository';
 class LoginService {
   _loginRepository: LoginRepository;
 
+  _key: string;
+
   constructor(loginRepository: LoginRepository) {
     this._loginRepository = loginRepository;
+    this._key = readFileSync('./jwt.evaluation.key', 'utf-8');
   }
 
   private static VerifyEmail(email: string): void {
     const missingMailMessage = 'All fields must be filled';
-    const regexEmail = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
+    // const regexEmail = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
     if (!email && email !== '') {
       const err = new HttpException(EError.notAuthorized, missingMailMessage);
       throw err;
@@ -22,11 +25,11 @@ class LoginService {
       const err = new HttpException(EError.notAuthorized, missingMailMessage);
       throw err;
     }
-    if (regexEmail.test(email) === false) {
-      const error = '"email" must be a valid email';
-      const err = new HttpException(EError.invalidData, error);
-      throw err;
-    }
+    // if (regexEmail.test(email) === false) {
+    //   const error = '"email" must be a valid email';
+    //   const err = new HttpException(EError.invalidData, error);
+    //   throw err;
+    // }
   }
 
   private static VerifyPassword(password: string): void {
@@ -55,13 +58,21 @@ class LoginService {
       const err = new HttpException(EError.notAuthorized, 'Incorrect email or password');
       throw err;
     }
-    const key = readFileSync('./jwt.evaluation.key', 'utf-8');
     const user = { id: foundUser.id, username: foundUser.username, email, role: foundUser.role };
-    const token = jwt.sign(user, key, {
+    const token = jwt.sign(user, this._key, {
       algorithm: 'HS256',
       expiresIn: '1d',
     });
     return { user, token };
+  }
+
+  public Validate(token: string): jwt.JwtPayload {
+    const decoded = jwt.verify(
+      token,
+      this._key,
+      { algorithms: ['HS256'] },
+    );
+    return decoded as jwt.JwtPayload;
   }
 }
 

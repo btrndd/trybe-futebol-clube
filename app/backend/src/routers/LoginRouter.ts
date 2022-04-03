@@ -9,4 +9,8 @@ router.post('/', (req, res, next) => {
   controller.Login(req, res, next);
 });
 
+router.get('/validate', (req, res, next) => {
+  controller.Validate(req, res, next);
+});
+
 export default router;
