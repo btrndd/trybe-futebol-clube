@@ -4,19 +4,14 @@ import chaiHttp = require('chai-http');
 
 import { app } from '../app';
 
-import { Response } from 'superagent';
 import User from '../database/models/User';
+import { Response } from 'superagent';
 
 chai.use(chaiHttp);
 
 const { expect } = chai;
 
 describe('Rota /login', () => {
-  const validUser = {
-    "email": "admin@admin.com",
-    "password": "secret_admin"
-  };
-
   describe('Post para autenticação de usuário', () => {
     let chaiHttpResponse: Response;
 
@@ -27,13 +22,15 @@ describe('Rota /login', () => {
           id: 1,
           username: 'Admin',
           email: 'admin@admin.com',
-          role: 'admin'
+          role: 'admin',
+          password: '$2a$08$xi.Hxk1czAO0nZR..B393u10aED0RQ1N3PAEXQ7HxtLjKPEZBu.PW'
         } as User);
 
       chaiHttpResponse = await chai
       .request(app)
       .post('/login')
-      .send(validUser);
+      .set('content-type', 'application/json')
+      .send({ email: 'admin@admin.com', password: 'secret_admin' });
     });
 
     after(()=>{
@@ -41,11 +38,12 @@ describe('Rota /login', () => {
     })
 
     it('Recebe um token de autenticação na response', async () => {
-      expect(chaiHttpResponse).to.have.property('token');
+      console.log(chaiHttpResponse);
+      expect(chaiHttpResponse.body).to.have.property('token');
     });
 
     it('Recebe dados do usuário na response', async () => {
-      expect(chaiHttpResponse).to.have.property('user');
+      expect(chaiHttpResponse.body).to.have.property('user');
     });
 
     it('Recebe status 200 com envio de body válido', async () => {
@@ -79,7 +77,7 @@ describe('Rota /login', () => {
     });
 
     it('A response possui a propriedade "message"', async () => {   
-      expect(chaiHttpResponse).to.have.property('message');
+      expect(chaiHttpResponse.body).to.have.property('message');
     });
 
     it('A response.message possui o texto "Incorrect email or password"', async () => {
@@ -113,11 +111,32 @@ describe('Rota /login', () => {
     });
 
     it('A response possui a propriedade "message"', async () => {   
-      expect(chaiHttpResponse).to.have.property('message');
+      expect(chaiHttpResponse.body).to.have.property('message');
     });
 
     it('A response.message possui o texto "Incorrect email or password"', async () => {
       expect(chaiHttpResponse.body.message).to.be.equal('Incorrect email or password');
+    });
+  });
+
+  describe('Get /login/validate para autenticação de usuário', () => {
+    let chaiHttpResponse: Response;
+    
+    before(async () => {
+        const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJBZG1pbiIsImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjQ5MDIyNzA0LCJleHAiOjE2NDkxMDkxMDR9.582V8iL7oTTP7KQg1FC_TgNjKLSJ73dz1T1H3q2jw1M';
+
+        chaiHttpResponse = await chai
+          .request(app)
+          .get('/login/validate')
+          .set({ "Authorization": `${token}` });
+    })
+
+    it('Recebe status 200 com token válido', async () => {
+      expect(chaiHttpResponse).to.have.status(200);
+    });
+
+    it('A response possui uma string informando o role do usuário', async () => {
+      expect(chaiHttpResponse.body).to.be.equal('admin');
     });
   });
 });
