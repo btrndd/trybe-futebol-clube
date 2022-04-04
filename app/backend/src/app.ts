@@ -3,6 +3,7 @@ import cors = require('cors');
 import LoginRouter from './routers/LoginRouter';
 import errorMiddleware from './middlewares/errorMiddleware';
 import ClubRouter from './routers/ClubRouter';
+import MatchRouter from './routers/MatchRouter';
 
 class App {
   public app: express.Express;
@@ -25,6 +26,7 @@ class App {
     this.app.use(cors());
     this.app.use('/login', LoginRouter);
     this.app.use('/clubs', ClubRouter);
+    this.app.use('/matchs', MatchRouter);
     this.app.use(errorMiddleware.manage);
     this.app.use(errorMiddleware.server);
   }
