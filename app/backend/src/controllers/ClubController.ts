@@ -23,10 +23,10 @@ class ClubController {
   async Get(req: Request, res: Response, next: NextFunction) {
     const { id } = req.params;
     try {
-      if (typeof id !== 'number') {
+      if (Number.isNaN(+id)) {
         throw new HttpException(EError.invalidData, 'Oops! Seems it does not exist...');
       }
-      const response = await this._clubService.Get(id);
+      const response = await this._clubService.Get(+id);
 
       res.status(200).json(response);
     } catch (err) {
