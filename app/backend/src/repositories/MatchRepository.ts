@@ -1,6 +1,7 @@
 import MatchRequest from '../dtos/MatchRequest';
 import Club from '../database/models/Club';
 import Match from '../database/models/Match';
+import ScoreRequest from '../dtos/ScoreRequest';
 
 class MatchRepository {
   private _model = Match;
@@ -33,9 +34,12 @@ class MatchRepository {
     );
   }
 
-  // async remove(id: Match['id']): Promise<void> {
-  //   await UserModel.destroy({ where: { id } });
-  // }
+  async EditScore(id: Match['id'], score: ScoreRequest): Promise<void> {
+    await this._model.update(
+      score,
+      { where: { id } },
+    );
+  }
 
   async Add(data: MatchRequest): Promise<Match> {
     const createdMatch = await this._model.create(data);

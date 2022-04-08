@@ -18,4 +18,8 @@ router.patch('/:id/finish', (req, res, next) => {
   controller.EndMatch(req, res, next);
 });
 
+router.patch('/:id', (req, res, next) => {
+  controller.EditScore(req, res, next);
+});
+
 export default router;

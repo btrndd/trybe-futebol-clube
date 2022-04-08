@@ -3,6 +3,7 @@ import EError from '../interfaces/EError';
 import ClubRepository from '../repositories/ClubRepository';
 import MatchRequest from '../dtos/MatchRequest';
 import MatchRepository from '../repositories/MatchRepository';
+import ScoreRequest from '../dtos/ScoreRequest';
 
 class MatchService {
   private _matchRepository: MatchRepository;
@@ -44,6 +45,15 @@ class MatchService {
     }
     await this._matchRepository.EndMatch(id);
     return { message: 'Match ended successfully!' };
+  }
+
+  public async EditScore(id: number, score: ScoreRequest) {
+    const match = await this._matchRepository.Get(id);
+    if (!match) {
+      throw new HttpException(EError.notFound, 'There is no match with such id!');
+    }
+    await this._matchRepository.EditScore(id, score);
+    return { message: 'Match score updated successfully!' };
   }
 }
 
