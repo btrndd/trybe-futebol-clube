@@ -20,13 +20,17 @@ class MatchService {
 
   public async Add(data: MatchRequest) {
     const awayTeam = await this._clubRepository.Get(data.awayTeam);
-    if (!awayTeam) {
-      throw new HttpException(EError.notFound, 'Oops! Away team not found...');
+    const homeTeam = await this._clubRepository.Get(data.homeTeam);
+
+    if (!awayTeam || !homeTeam) {
+      throw new HttpException(EError.notFound, 'There is no team with such id!');
     }
 
-    const homeTeam = await this._clubRepository.Get(data.homeTeam);
-    if (!homeTeam) {
-      throw new HttpException(EError.notFound, 'Oops! Home team not found...');
+    if (data.homeTeam === data.awayTeam) {
+      throw new HttpException(
+        EError.invalidData,
+        'It is not possible to create a match with two equal teams',
+      );
     }
 
     const match = await this._matchRepository.Add(data);
