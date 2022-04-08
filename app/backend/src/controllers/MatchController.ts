@@ -28,9 +28,21 @@ class MatchController {
         throw new HttpException(EError.invalidData, 'Partida já finalizada.');
       }
       const match = new MatchRequest(+awayTeam, +awayTeamGoals, +homeTeam, +homeTeamGoals);
-      console.log(match);
       const response = await this._matchService.Add(match);
 
+      res.status(200).json(response);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async EndMatch(req: Request, res: Response, next: NextFunction) {
+    const { id } = req.params;
+    try {
+      if (Number.isNaN(+id)) {
+        throw new HttpException(EError.invalidData, 'Oops! Seems it does not exist...');
+      }
+      const response = await this._matchService.EndMatch(+id);
       res.status(200).json(response);
     } catch (err) {
       next(err);

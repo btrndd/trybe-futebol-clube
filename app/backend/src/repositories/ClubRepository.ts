@@ -1,18 +1,16 @@
 import Club from '../database/models/Club';
 
 class ClubRepository {
-  private _club: Club | Club[] | null;
+  private _model = Club;
 
   async List(): Promise<Club[]> {
-    const result = await Club.findAll({ raw: true });
-    this._club = result;
-    return this._club as Club[];
+    const result = await this._model.findAll({ raw: true });
+    return result as Club[];
   }
 
   async Get(id: Club['id']): Promise<Club> {
-    const result = await Club.findByPk(id, { raw: true });
-    this._club = result;
-    return this._club as Club;
+    const result = await this._model.findByPk(id, { raw: true });
+    return result as Club;
   }
 
   // async edit(id: Club['id'], changes: EditUser): Promise<void> {

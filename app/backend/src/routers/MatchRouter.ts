@@ -14,4 +14,8 @@ router.post('/', authMiddleware.auth, (req, res, next) => {
   controller.Add(req, res, next);
 });
 
+router.patch('/:id/finish', (req, res, next) => {
+  controller.EndMatch(req, res, next);
+});
+
 export default router;

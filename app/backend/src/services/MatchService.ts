@@ -36,6 +36,15 @@ class MatchService {
     const match = await this._matchRepository.Add(data);
     return match;
   }
+
+  public async EndMatch(id: number) {
+    const match = await this._matchRepository.Get(id);
+    if (!match) {
+      throw new HttpException(EError.notFound, 'There is no match with such id!');
+    }
+    await this._matchRepository.EndMatch(id);
+    return { message: 'Match ended successfully!' };
+  }
 }
 
 export default MatchService;

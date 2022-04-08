@@ -21,25 +21,23 @@ class MatchRepository {
     return result;
   }
 
-  // async edit(id: Match['id'], changes: EditUser): Promise<void> {
-  //   await UserModel.update(
-  //     { ...changes, updatedAt: new Date() },
-  //     { where: { id } },
-  //   );
-  // }
+  async Get(id: Match['id']): Promise<Match> {
+    const result = await this._model.findByPk(id, { raw: true });
+    return result as Match;
+  }
+
+  async EndMatch(id: Match['id']): Promise<void> {
+    await this._model.update(
+      { inProgress: false },
+      { where: { id } },
+    );
+  }
 
   // async remove(id: Match['id']): Promise<void> {
   //   await UserModel.destroy({ where: { id } });
   // }
 
   async Add(data: MatchRequest): Promise<Match> {
-    // const test = {
-    //   homeTeam: data.homeTeam,
-    //   homeTeamGoals: data.homeTeamGoals,
-    //   awayTeam: data.awayTeam,
-    //   awayTeamGoals: data.awayTeamGoals,
-    //   inProgress: true,
-    // };
     const createdMatch = await this._model.create(data);
     return createdMatch;
   }
