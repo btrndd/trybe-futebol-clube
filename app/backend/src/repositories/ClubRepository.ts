@@ -3,13 +3,13 @@ import Club from '../database/models/Club';
 class ClubRepository {
   private _club: Club | Club[] | null;
 
-  async list(): Promise<Club[]> {
+  async List(): Promise<Club[]> {
     const result = await Club.findAll({ raw: true });
     this._club = result;
     return this._club as Club[];
   }
 
-  async get(id: Club['id']): Promise<Club> {
+  async Get(id: Club['id']): Promise<Club> {
     const result = await Club.findByPk(id, { raw: true });
     this._club = result;
     return this._club as Club;

@@ -28,7 +28,7 @@ class App {
     this.app.use('/clubs', ClubRouter);
     this.app.use('/matchs', MatchRouter);
     this.app.use(errorMiddleware.manage);
-    this.app.use(errorMiddleware.server);
+    // this.app.use(errorMiddleware.server);
   }
 
   public start(PORT: string | number):void {

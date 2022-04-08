@@ -10,12 +10,12 @@ class ClubService {
   }
 
   public async List() {
-    const clubs = await this._clubRepository.list();
+    const clubs = await this._clubRepository.List();
     return clubs;
   }
 
   public async Get(id: number) {
-    const club = await this._clubRepository.get(id);
+    const club = await this._clubRepository.Get(id);
 
     if (!club) {
       throw new HttpException(EError.notFound, 'Oops! Club not found...');

@@ -33,7 +33,7 @@ module.exports = {
       away_team_goals: { type: Sequelize.INTEGER, allowNull: false },
 
       in_progress: {
-        type: Sequelize.BOOLEAN, allowNull: false,
+        type: Sequelize.TINYINT, allowNull: false,
       },
     });
   },

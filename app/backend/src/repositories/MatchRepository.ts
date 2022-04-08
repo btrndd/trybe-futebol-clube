@@ -1,11 +1,12 @@
+import MatchRequest from '../dtos/MatchRequest';
 import Club from '../database/models/Club';
 import Match from '../database/models/Match';
 
 class MatchRepository {
-  private _match: Match | Match[] | null;
+  private _model = Match;
 
-  async list(): Promise<Match[]> {
-    const result = await Match.findAll({
+  async List(): Promise<Match[]> {
+    const result = await this._model.findAll({
       include: [{
         as: 'homeClub',
         model: Club,
@@ -17,8 +18,7 @@ class MatchRepository {
         attributes: { exclude: ['id'] },
       }],
     });
-    this._match = result;
-    return this._match as Match[];
+    return result;
   }
 
   // async edit(id: Match['id'], changes: EditUser): Promise<void> {
@@ -32,10 +32,17 @@ class MatchRepository {
   //   await UserModel.destroy({ where: { id } });
   // }
 
-  // async add(data: AddUser): Promise<Match['id']> {
-  //   const obj = await UserModel.create({ ...data, createdAt: new Date() });
-  //   return obj.getDataValue('id');
-  // }
+  async Add(data: MatchRequest): Promise<Match> {
+    // const test = {
+    //   homeTeam: data.homeTeam,
+    //   homeTeamGoals: data.homeTeamGoals,
+    //   awayTeam: data.awayTeam,
+    //   awayTeamGoals: data.awayTeamGoals,
+    //   inProgress: true,
+    // };
+    const createdMatch = await this._model.create(data);
+    return createdMatch;
+  }
 }
 
 export default MatchRepository;

@@ -33,7 +33,7 @@ Match.init(
 
     awayTeamGoals: { type: DataTypes.INTEGER, allowNull: false },
 
-    inProgress: { type: DataTypes.TINYINT, allowNull: false },
+    inProgress: { type: DataTypes.BOOLEAN, allowNull: false },
   },
 
   {
