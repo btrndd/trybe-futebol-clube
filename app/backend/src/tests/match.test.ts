@@ -7,7 +7,6 @@ import { app } from '../app';
 import Match from '../database/models/Match';
 import { Response } from 'superagent';
 import matchs from './Mocks/matchs';
-import { match } from 'assert';
 
 chai.use(chaiHttp);
 
