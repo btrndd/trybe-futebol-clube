@@ -38,7 +38,7 @@ class LoginService {
     }
     if (password.length < 6) {
       const error = '"password" length must be 6 characters long';
-      const err = new HttpException(EError.invalidData, error);
+      const err = new HttpException(EError.notAuthorized, error);
       throw err;
     }
   }
