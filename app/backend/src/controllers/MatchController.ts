@@ -28,7 +28,7 @@ class MatchController {
       if (inProgress === false) {
         throw new HttpException(EError.invalidData, 'Partida já finalizada.');
       }
-      const match = new MatchRequest(+awayTeam, +awayTeamGoals, +homeTeam, +homeTeamGoals);
+      const match = new MatchRequest(+homeTeam, +homeTeamGoals, +awayTeam, +awayTeamGoals);
       const response = await this._matchService.Add(match);
 
       res.status(201).json(response);
