@@ -31,7 +31,7 @@ class MatchController {
       const match = new MatchRequest(+awayTeam, +awayTeamGoals, +homeTeam, +homeTeamGoals);
       const response = await this._matchService.Add(match);
 
-      res.status(200).json(response);
+      res.status(201).json(response);
     } catch (err) {
       next(err);
     }

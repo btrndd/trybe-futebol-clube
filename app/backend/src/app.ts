@@ -16,7 +16,7 @@ class App {
   private config():void {
     const accessControl: express.RequestHandler = (_req, res, next) => {
       res.header('Access-Control-Allow-Origin', '*');
-      res.header('Access-Control-Allow-Methods', 'GET,POST,DELETE,OPTIONS,PUT');
+      res.header('Access-Control-Allow-Methods', 'GET,POST,DELETE,OPTIONS,PUT,PATCH');
       res.header('Access-Control-Allow-Headers', '*');
       next();
     };
@@ -28,7 +28,7 @@ class App {
     this.app.use('/clubs', ClubRouter);
     this.app.use('/matchs', MatchRouter);
     this.app.use(errorMiddleware.manage);
-    // this.app.use(errorMiddleware.server);
+    this.app.use(errorMiddleware.server);
   }
 
   public start(PORT: string | number):void {
