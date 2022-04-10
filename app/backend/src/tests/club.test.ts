@@ -4,32 +4,67 @@ import chaiHttp = require('chai-http');
 
 import { app } from '../app';
 
-import User from '../database/models/User';
+import Club from '../database/models/Club';
 import { Response } from 'superagent';
+import clubs from './Mocks/clubs';
 
 chai.use(chaiHttp);
 
 const { expect } = chai;
 
 describe('Rota /clubs', () => {
-  describe('Get /login/validate para autenticação de usuário', () => {
+  describe('Get /clubs', () => {
     let chaiHttpResponse: Response;
     
     before(async () => {
-        const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJBZG1pbiIsImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjQ5MDIyNzA0LCJleHAiOjE2NDkxMDkxMDR9.582V8iL7oTTP7KQg1FC_TgNjKLSJ73dz1T1H3q2jw1M';
+      sinon.stub(Club, 'findAll')
+            .resolves(clubs as Club[]); 
 
-        chaiHttpResponse = await chai
-          .request(app)
-          .get('/login/validate')
-          .set({ "Authorization": `${token}` });
+      chaiHttpResponse = await chai
+        .request(app)
+        .get('/clubs');
     })
 
-    it('Recebe status 200 com token válido', async () => {
+    after(()=>{
+      (Club.findAll as sinon.SinonStub).restore();
+    })
+
+    it('Recebe status 200', async () => {
       expect(chaiHttpResponse).to.have.status(200);
     });
 
-    it('A response possui uma string informando o role do usuário', async () => {
-      expect(chaiHttpResponse.body).to.be.equal('admin');
+    it('A requisição GET para a rota traz uma lista inicial contendo 16 registros de clubs', async () => {
+      expect(chaiHttpResponse.body).to.have.length(16);
+    });
+  });
+
+  describe('Get /clubs/:id', () => {
+    let chaiHttpResponse: Response;
+    const index = 1;
+    
+    before(async () => {
+      sinon.stub(Club, 'findByPk')
+            .resolves(clubs[index - 1] as Club); 
+
+      chaiHttpResponse = await chai
+        .request(app)
+        .get(`/clubs/${index}`);
+    })
+
+    after(()=>{
+      (Club.findByPk as sinon.SinonStub).restore();
+    })
+
+    it('Recebe status 200', async () => {
+      expect(chaiHttpResponse).to.have.status(200);
+    });
+
+    it('A requisição GET para a rota traz apenas 1 registro de clubs', async () => {
+      expect([chaiHttpResponse.body]).to.have.length(1);
+    });
+
+    it('A requisição GET para a rota 1 registro de clubs com o mesmo id da rota', async () => {
+      expect(chaiHttpResponse.body.id).to.be.equal(index);
     });
   });
 });

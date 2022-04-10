@@ -38,7 +38,6 @@ describe('Rota /login', () => {
     })
 
     it('Recebe um token de autenticação na response', async () => {
-      console.log(chaiHttpResponse);
       expect(chaiHttpResponse.body).to.have.property('token');
     });
 
@@ -123,7 +122,7 @@ describe('Rota /login', () => {
     let chaiHttpResponse: Response;
     
     before(async () => {
-        const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJBZG1pbiIsImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjQ5MDIyNzA0LCJleHAiOjE2NDkxMDkxMDR9.582V8iL7oTTP7KQg1FC_TgNjKLSJ73dz1T1H3q2jw1M';
+        const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJBZG1pbiIsImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjQ5NjEyNjEzLCJleHAiOjE2NDk2OTkwMTN9.18uC-xwPggalXefiBD6p7kK_UB-qybkTdQ_A6h0ar9Y';
 
         chaiHttpResponse = await chai
           .request(app)

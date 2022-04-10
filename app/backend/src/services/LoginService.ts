@@ -17,7 +17,6 @@ class LoginService {
 
   private static VerifyEmail(email: string): void {
     const missingMailMessage = 'All fields must be filled';
-    // const regexEmail = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
     if (!email && email !== '') {
       const err = new HttpException(EError.notAuthorized, missingMailMessage);
       throw err;
@@ -25,11 +24,6 @@ class LoginService {
       const err = new HttpException(EError.notAuthorized, missingMailMessage);
       throw err;
     }
-    // if (regexEmail.test(email) === false) {
-    //   const error = '"email" must be a valid email';
-    //   const err = new HttpException(EError.invalidData, error);
-    //   throw err;
-    // }
   }
 
   private static VerifyPassword(password: string): void {

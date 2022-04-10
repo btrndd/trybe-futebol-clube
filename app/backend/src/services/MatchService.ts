@@ -24,12 +24,12 @@ class MatchService {
     const homeTeam = await this._clubRepository.Get(data.homeTeam);
 
     if (!awayTeam || !homeTeam) {
-      throw new HttpException(EError.notFound, 'There is no team with such id!');
+      throw new HttpException(EError.notAuthorized, 'There is no team with such id!');
     }
 
     if (data.homeTeam === data.awayTeam) {
       throw new HttpException(
-        EError.invalidData,
+        EError.notAuthorized,
         'It is not possible to create a match with two equal teams',
       );
     }
@@ -41,7 +41,7 @@ class MatchService {
   public async EndMatch(id: number) {
     const match = await this._matchRepository.Get(id);
     if (!match) {
-      throw new HttpException(EError.notFound, 'There is no match with such id!');
+      throw new HttpException(EError.notAuthorized, 'There is no match with such id!');
     }
     await this._matchRepository.EndMatch(id);
     return { message: 'Match ended successfully!' };
@@ -50,7 +50,7 @@ class MatchService {
   public async EditScore(id: number, score: ScoreRequest) {
     const match = await this._matchRepository.Get(id);
     if (!match) {
-      throw new HttpException(EError.notFound, 'There is no match with such id!');
+      throw new HttpException(EError.notAuthorized, 'There is no match with such id!');
     }
     await this._matchRepository.EditScore(id, score);
     return { message: 'Match score updated successfully!' };
