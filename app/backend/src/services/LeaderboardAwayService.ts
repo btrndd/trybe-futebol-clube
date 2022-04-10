@@ -3,21 +3,21 @@ import LeaderboardResponse from '../dtos/LeaderboardReponse';
 import ClubRepository from '../repositories/ClubRepository';
 import MatchRepository from '../repositories/MatchRepository';
 
-class LeaderboardHomeService {
+class LeaderboardAwayService {
   private _matchRepository = new MatchRepository();
 
   private _clubRepository = new ClubRepository();
 
   private async GetTotalResults(id: number) {
     const matchs = await this._matchRepository.List();
-    const teamMatchs = matchs.filter((team) => team.homeTeam === id && team.inProgress === false);
+    const teamMatchs = matchs.filter((team) => team.awayTeam === id && team.inProgress === false);
 
-    const wins = teamMatchs.filter((team) => team.homeTeamGoals > team.awayTeamGoals);
-    const losses = teamMatchs.filter((team) => team.homeTeamGoals < team.awayTeamGoals);
+    const wins = teamMatchs.filter((team) => team.awayTeamGoals > team.homeTeamGoals);
+    const losses = teamMatchs.filter((team) => team.awayTeamGoals < team.homeTeamGoals);
     const draws = teamMatchs.filter((team) => team.homeTeamGoals === team.awayTeamGoals);
 
-    const goalsFavor = teamMatchs.reduce((x, y): number => x + y.homeTeamGoals, 0);
-    const goalsOwn = teamMatchs.reduce((x, y): number => x + y.awayTeamGoals, 0);
+    const goalsFavor = teamMatchs.reduce((x, y): number => x + y.awayTeamGoals, 0);
+    const goalsOwn = teamMatchs.reduce((x, y): number => x + y.homeTeamGoals, 0);
 
     const result = new LeaderboardResponse();
     result.totalPoints = (wins.length * 3) + draws.length;
@@ -72,16 +72,16 @@ class LeaderboardHomeService {
     const levelTwo = (a.totalPoints === b.totalPoints && a.totalVictories === b.totalVictories);
     const levelOne = a.totalPoints === b.totalPoints;
     const levels = [levelOne, levelTwo, levelThree, levelFour];
-    return LeaderboardHomeService.switchFunc(a, b, levels);
+    return LeaderboardAwayService.switchFunc(a, b, levels);
   }
 
   public async List() {
     const clubs = await this._clubRepository.List();
     const result = this.mapResult(clubs);
     const awaitedResult = await Promise.all(result);
-    const sorted = awaitedResult.sort((a, b) => LeaderboardHomeService.sortFunction(a, b));
+    const sorted = awaitedResult.sort((a, b) => LeaderboardAwayService.sortFunction(a, b));
     return sorted;
   }
 }
 
-export default LeaderboardHomeService;
+export default LeaderboardAwayService;
