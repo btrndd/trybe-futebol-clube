@@ -13,4 +13,8 @@ router.get('/away', (req, res, next) => {
   controller.ListAway(req, res, next);
 });
 
+router.get('/', (req, res, next) => {
+  controller.List(req, res, next);
+});
+
 export default router;
