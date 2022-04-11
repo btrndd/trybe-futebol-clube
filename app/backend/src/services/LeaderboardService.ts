@@ -41,11 +41,11 @@ class LeaderboardService {
   }
 
   private static sumLists(homeData: LeaderboardResponse[], awayData: LeaderboardResponse[]) {
-    const results = [];
-    for (let index = 0; index < 10; index += 1) {
+    const results: LeaderboardResponse[] = [];
+    homeData.map((club) => club.name).forEach((name) => {
       const result = new LeaderboardResponse();
-      const home = homeData[index];
-      const away = awayData[index];
+      const home = homeData.filter((club) => club.name === name)[0];
+      const away = awayData.filter((club) => club.name === name)[0];
       result.name = home.name;
       result.totalPoints = home.totalPoints + away.totalPoints;
       result.totalGames = home.totalGames + away.totalGames;
@@ -57,7 +57,7 @@ class LeaderboardService {
       result.goalsBalance = result.goalsFavor - result.goalsOwn;
       result.efficiency = +(((result.totalPoints) / (result.totalGames * 3)) * 100).toFixed(2);
       results.push(result);
-    }
+    });
     return results;
   }
 
