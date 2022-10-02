@@ -1,5 +1,3 @@
-![Exemplo app front](./front-example.png)
-
 O `TFC` é um site informativo sobre partidas e classificações de futebol! ⚽️
 
 # Habilidades
